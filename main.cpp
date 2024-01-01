@@ -2,8 +2,8 @@
 #include <fstream>
 #include <iomanip>
 #include <list>
+#include <set>
 #include "Board.h"
-#include<unistd.h>
 void init(Board*&);
 void run(Board*&);
 void ReadInFile(std::string,Board*&);
@@ -53,7 +53,7 @@ void init(Board*& board){
    ReadInFile(fileName,board);
 }
 void run(Board*&board){
-   int i=20;
+   int i=5;
    board->printPlayer();
    while(i--){
       // board->printTemp();
