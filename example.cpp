@@ -10,7 +10,7 @@ using namespace std;
 void show(int A[][W + 2])
 {
    // system("cls");
-   string mark[2] = {"口", "X"};
+   string mark[2] = {"0", "1"};
    int i, j;
    cout << "      ";
    for (i = 1; i < W + 1; i++)
@@ -78,6 +78,7 @@ int main(int argc, char **argv)
    int A[H + 2][W + 2] = {0};
    read("lifegame.txt", A);
    int i;
+   show(A);
    for (i = 0; i < 20; i++)
    {
       show(A);
