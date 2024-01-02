@@ -12,17 +12,13 @@ void show(int A[][W + 2])
    // system("cls");
    string mark[2] = {"0", "1"};
    int i, j;
-   cout << "      ";
-   for (i = 1; i < W + 1; i++)
-      cout << "[" << setw(3) << i << "]";
-   cout << endl;
    for (i = 1; i < H + 1; i++)
    {
-      cout << "[" << setw(3) << i << "]";
       for (j = 1; j < W + 1; j++)
-         cout << setw(5) << mark[A[i][j]];
+         cout <<setw(2)<< mark[A[i][j]];
       cout << endl;
    }
+   std :: cout << std::endl;
 }
 void read(string filename, int A[][W + 2])
 {
@@ -78,8 +74,7 @@ int main(int argc, char **argv)
    int A[H + 2][W + 2] = {0};
    read("lifegame.txt", A);
    int i;
-   show(A);
-   for (i = 0; i < 20; i++)
+   for (i = 0; i < 5; i++)
    {
       show(A);
       check(A);

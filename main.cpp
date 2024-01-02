@@ -57,8 +57,10 @@ void run(Board*&board){
    board->printPlayer();
    while(i--){
       // board->printTemp();
-      board->CalcLifeCell();
-      board->SetCell();
+      // board->CalcLifeCell();
+      board->mapNeighbor();
+      board->calcNeighbor();
+      board->setCell();
       std::cout << std::endl;
       board->printPlayer();
       // usleep(1000000);
@@ -87,7 +89,7 @@ void WriteInFile(std::string filename, Board*& board){
       board =new Board();
       board->setPlayer();
       while(file >> y >> x)
-         board->setSelf(y,x);
+         board->setSelf(y,x,CELLVAl::POP);
       file.clear();
       file.close();
    }
@@ -115,7 +117,7 @@ void ReadInFile(std::string filename, Board*& board){
       board =new Board();
       board->setPlayer();
       while(file >> y >> x)
-         board->setSelf(y,x);
+         board->setSelf(y,x,CELLVAl::POP);
       file.clear();
       file.close();
    }

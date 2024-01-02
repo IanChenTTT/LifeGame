@@ -4,6 +4,7 @@
 #define POPULATE 1
 #define listPoint std::list<Cell>
 #define setPoint std::set<Cell>
+#define unMapCell std::unordered_map<Cell, int, KeyHasher> //(Cell,Cell Value,Keyhasher)
 enum CELLVAl
 {
    EMP,
@@ -14,6 +15,20 @@ struct Cell
    int x;
    int y;
    CELLVAl val;
+   bool operator==(const Cell &other) const
+   {
+      return (other.x == this->x && other.y == this->y && other.val == this->val);
+   }
+};
+struct KeyHasher
+{
+   std::size_t operator()(const Cell &key) const
+   {
+      using std::hash;
+      using std::size_t;
+      using std::string;
+      return ((hash<int>()(key.x) ^ (hash<int>()(key.y << 1)) >> 1));
+   }
 };
 class Board
 {
@@ -32,76 +47,67 @@ public:
       for (int y = 0; y < this->HEIGHT; y++)
          this->playerBuffer[y] = (int *)calloc(this->WIDTH, sizeof(int));
    }
-   void setSelf(int y, int x)
-   {
-      this->playerBuffer[y][x] = POPULATE;
-      this->PopCell.push_back(Cell{x, y, CELLVAl::POP}); // Only Record write in
+   void setSelf(int y, int x, CELLVAl val){
+      this->playerBuffer[y][x] = val;
+      this->popCell.emplace_back(Cell{x, y, val}); // Only Record write in
    }
-   void setTempBuffer()
-   {
-      auto it = this->ListBuffer.begin();
-      while (it != this->ListBuffer.end())
+   void mapNeighbor(){
+      auto it = popCell.begin();
+      int x;
+      int y;
+      while (it != popCell.end())
       {
+         x = it->x;
+         y = it->y;
+         for (int y1 = y - 1; y1 <= y + 1; y1++) // 0 and HEIGHT is boundry
+         {
+            for (int x1 = x - 1; x1 <= x + 1; x1++){
+               if (y1 <= 0 || y1 >= this->HEIGHT - 1 || x1 <= 0 || x1 >= this->WIDTH - 1)continue;
+               this->mapCell.emplace(Cell{x1, y1, (CELLVAl)this->playerBuffer[y1][x1]}, CELLVAl::EMP);
+            }
+         }
+         it++;
       }
    }
-   listPoint getTempBuffer()
-   {
-      return this->ListBuffer;
-   }
-   void CalcLifeCell()
+   void calcNeighbor()
    {
       int neighbor;
       int x;
       int y;
       int val;
-      for (auto it = this->PopCell.begin(); it != this->PopCell.end(); ++it) // FOR every set Val
-      {
-         x = it->x;
-         y = it->x;
-         val = it->x;
-         for (int y1 = y - 1; y1 > 0 && y1 < this->HEIGHT - 1; y1++)
-         {
-            for (int x1 = y - 1; x1 > 0 && x1 < this->HEIGHT - 1; x1++) // Check 9 SQUARE
-            {
-               neighbor = 0;
-               neighbor +=
-                   this->playerBuffer[y1 - 1][x1 - 1] + this->playerBuffer[y1 - 1][x1] + this->playerBuffer[y1 - 1][x1 + 1] +
-                   this->playerBuffer[y1][x1 - 1] + this->playerBuffer[y1][x1 + 1] +
-                   this->playerBuffer[y1 + 1][x1 - 1] + this->playerBuffer[y1 + 1][x1] + this->playerBuffer[y1 + 1][x1 + 1];
-               if (neighbor == 3 && this->playerBuffer[x][y] != CELLVAl::POP)
-               {
-                  this->ListBuffer.push_back(Cell{x, y, CELLVAl::POP});
-                  continue;
-               }
-               if ((neighbor == 3 || neighbor == 2) && this->playerBuffer[x][y] == CELLVAl::POP) // allive before
-                  continue;
-               else if (this->playerBuffer[x][y] == CELLVAl::EMP)
-                  continue;
-               else
-                  this->ListBuffer.push_back(Cell{x, y, CELLVAl::EMP});
-            } // NOTE:: only cell was POP to EMP, or EMP to POP write to ListBuffer
+      for (auto it = this->mapCell.begin(); it != this->mapCell.end(); ++it){
+         x = it->first.x;
+         y = it->first.y;
+         val = it->first.val;
+         neighbor = 0;
+         for (int y1 = y - 1; y1 <= y + 1; y1++){
+            for (int x1 = x - 1; x1 <= x + 1; x1++)
+               neighbor += this->playerBuffer[y1][x1];
+         }
+         if (this->playerBuffer[y][x] == CELLVAl::POP){
+            if (neighbor == 3 || neighbor == 4)
+               continue;
+            else
+               this->listBuffer.push_back(Cell{x, y, CELLVAl::EMP});
+         }
+         else if (neighbor == 3){
+            this->listBuffer.push_back(Cell{x, y, CELLVAl::POP});
          }
       }
    }
-   void SetCell()
+   void setCell()
    {
-      auto it = this->ListBuffer.begin();
-      while (it != this->ListBuffer.end())
-      {
-         int val = it->val; 
+      auto it = this->listBuffer.begin();
+      while (it != this->listBuffer.end()){
+         int val = it->val;
          this->playerBuffer[it->y][it->x] = it->val;
+         setSelf(it->y, it->x, it->val);
          if (val == CELLVAl::EMP)
-            PopCell.remove(Cell{it->x, it->y, CELLVAl::POP});
-         else
-            setSelf(it->y, it->y);
+            popCell.remove(Cell{it->x, it->y, CELLVAl::POP});
+         it++;
       }
-      this->ListBuffer.clear();
-   }
-   void printTemp()
-   {
-      auto it = ListBuffer.begin();
-      while (++it != ListBuffer.end())
-         std ::cout << it->x << " " << it->y << std::endl;
+      this->listBuffer.clear();
+      this->mapCell.clear();
    }
    void printPlayer()
    {
@@ -121,8 +127,10 @@ private:
    static int WIDTH;
    static int HEIGHT;
    int **playerBuffer;
-   listPoint ListBuffer;
-   listPoint PopCell;
+   listPoint listBuffer;
+   listPoint popCell;
+   unMapCell mapCell;
+
    void freePlayerBuf()
    {
       for (int y = 0; y < this->HEIGHT; y++)
