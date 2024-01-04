@@ -5,13 +5,11 @@
 #define listPoint std::list<Cell>
 #define setPoint std::set<Cell>
 #define unMapCell std::unordered_map<Cell, int, KeyHasher> //(Cell,Cell Value,Keyhasher)
-enum CELLVAl
-{
+enum CELLVAl{
    EMP,
    POP
 };
-struct Cell
-{
+struct Cell{
    int x;
    int y;
    CELLVAl val;
@@ -20,8 +18,7 @@ struct Cell
       return (other.x == this->x && other.y == this->y && other.val == this->val);
    }
 };
-struct KeyHasher
-{
+struct KeyHasher{
    std::size_t operator()(const Cell &key) const
    {
       using std::hash;
@@ -33,6 +30,7 @@ struct KeyHasher
 class Board
 {
 public:
+   const int SPACING = 1;
    Board() {}
    Board(int width, int height)
    {
@@ -55,14 +53,14 @@ public:
       auto it = popCell.begin();
       int x;
       int y;
-      while (it != popCell.end())
-      {
+      while (it != popCell.end()){
          x = it->x;
          y = it->y;
          for (int y1 = y - 1; y1 <= y + 1; y1++) // 0 and HEIGHT is boundry
          {
             for (int x1 = x - 1; x1 <= x + 1; x1++){
-               if (y1 <= 0 || y1 >= this->HEIGHT - 1 || x1 <= 0 || x1 >= this->WIDTH - 1)continue;
+               if (y1 <= 0 || y1 >= HEIGHT - SPACING || x1 <= 0 || x1 >= WIDTH - SPACING)
+                      continue;
                this->mapCell.emplace(Cell{x1, y1, (CELLVAl)this->playerBuffer[y1][x1]}, CELLVAl::EMP);
             }
          }
@@ -85,14 +83,11 @@ public:
                neighbor += this->playerBuffer[y1][x1];
          }
          if (this->playerBuffer[y][x] == CELLVAl::POP){
-            if (neighbor == 3 || neighbor == 4)
-               continue;
-            else
-               this->listBuffer.push_back(Cell{x, y, CELLVAl::EMP});
+            if (neighbor == 3 || neighbor == 4)continue;
+            else this->listBuffer.push_back(Cell{x, y, CELLVAl::EMP});
          }
-         else if (neighbor == 3){
+         else if (neighbor == 3)
             this->listBuffer.push_back(Cell{x, y, CELLVAl::POP});
-         }
       }
    }
    void setCell()
@@ -102,8 +97,7 @@ public:
          int val = it->val;
          this->playerBuffer[it->y][it->x] = it->val;
          setSelf(it->y, it->x, it->val);
-         if (val == CELLVAl::EMP)
-            popCell.remove(Cell{it->x, it->y, CELLVAl::POP});
+         if (val == CELLVAl::EMP)popCell.remove(Cell{it->x, it->y, CELLVAl::POP});
          it++;
       }
       this->listBuffer.clear();
@@ -111,9 +105,9 @@ public:
    }
    void printPlayer()
    {
-      for (int y = 1; y < this->HEIGHT - 1; y++)
+      for (int y = 1; y < HEIGHT - SPACING; y++)
       {
-         for (int x = 1; x < this->WIDTH - 1; x++)
+         for (int x = 1; x < WIDTH - SPACING; x++)
             std ::cout << std::setw(2) << this->playerBuffer[y][x];
          std ::cout << std ::endl;
       }
@@ -130,7 +124,6 @@ private:
    listPoint listBuffer;
    listPoint popCell;
    unMapCell mapCell;
-
    void freePlayerBuf()
    {
       for (int y = 0; y < this->HEIGHT; y++)

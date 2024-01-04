@@ -4,41 +4,39 @@
 #include <list>
 #include <set>
 #include "Board.h"
-void init(Board*&);
-void run(Board*&);
-void ReadInFile(std::string,Board*&);
+#include "InputManager.h"
 struct Input{
-   int mode;
-   int Height;
-   int Width;
-   int Iter;
-   int NumInput;
+   const int mode;
+   const int Height;
+   const int Width;
+   const int Iter;
+   const int NumInput;
+   Input(int mode,int Height,int Width,int Iter,int NumInput): 
+   mode(mode), Height(Height), Width(Width), Iter(Iter), NumInput(NumInput){}
 };
 int Board::WIDTH = 9;
 int Board::HEIGHT = 9;
-int main(int argc, char** args)
+void init(char**,Board*&);
+void run(Board*&);
+void ReadInFile(std::string,Board*&);
+void ReadInCLI(Input,Board*&);
+int main(int argc, char** argv)
 {
    try
    {
-      // Input in;
-      // in.mode = atoi(args[1]);
-      // in.Height = atoi(args[2]);
-      // in.Width = atoi(args[3]);
-      // in.Iter = atoi(args[4]);
-      // in.NumInput = atoi(args[5]);
       Board* board;
-      init(board);
+      init(argv,board);
       run(board);
       delete board;
    }
    catch(const std::runtime_error &e)
    {
-      std::cout << e.what() << std ::endl;
+      std::cerr << e.what() << std ::endl;
       exit(0);
    }
    catch (const std::bad_alloc &e)
    {
-      std::cout << "Allocation failed: " << e.what() << std ::endl;
+      std:: cerr<< "Allocation failed: " << e.what() << std ::endl;
       exit(0);
    }
    catch (const std::exception &e)
@@ -48,12 +46,21 @@ int main(int argc, char** args)
    }
    return 0;
 }
-void init(Board*& board){
+void init(char** argv,Board*& board){
    std::string fileName= "data.txt";
    ReadInFile(fileName,board);
+   // ReadInCLI(input,board);
+   // if(argc != 6)throw std::runtime_error("Not efficient argument was provide");
+      // Input input = {
+      //    atoi(argv[1]),
+      //    atoi(argv[2]),
+      //    atoi(argv[3]),
+      //    atoi(argv[4]),
+      //    atoi(argv[5]),
+      // };
 }
 void run(Board*&board){
-   int i=5;
+   int i=20;
    board->printPlayer();
    while(i--){
       // board->printTemp();
