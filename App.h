@@ -14,9 +14,10 @@ namespace APP
    mode(mode), Height(Height), Width(Width), Iter(Iter), NumInput(NumInput){}
    }; //CONST INITIALIZER
 
-   class Manager : Board // Namespace::class = App Manager
+   class Manager : public Board // Namespace::class = App Manager
    {
    private:
+      Board *board;
    public:
       Manager();
       ~Manager();
@@ -28,11 +29,8 @@ namespace APP
       */
       void run(int argc, char** argv)
       {
-         Board *board;
          init(argv, board);
          run(board);
-         std :: cout << "it end here";
-         delete board;
       }
       void init(char **argv, Board *&board)
       {
@@ -108,6 +106,8 @@ namespace APP
 
    Manager ::~Manager()
    {
+      Board::~Board();
+      delete board;
    }
 }
 
