@@ -15,7 +15,7 @@ int main(int argc, char** argv)
    try
    {
       APP::Manager* manager = new APP::Manager();
-      manager->run(argc,argv);
+      manager->run();
       delete manager;
    }
    catch(const std::runtime_error &e)

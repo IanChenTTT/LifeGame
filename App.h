@@ -4,66 +4,51 @@
 namespace APP
 {
    /// @brief READONLY struct from user CLI input
-   struct InputCLI{
-   const int mode;
-   const int Height;
-   const int Width;
-   const int Iter;
-   const int NumInput;
-   InputCLI(int mode,int Height,int Width,int Iter,int NumInput): 
-   mode(mode), Height(Height), Width(Width), Iter(Iter), NumInput(NumInput){}
-   }; //CONST INITIALIZER
+   struct InputCLI
+   {
+      const int mode;
+      const int Height;
+      const int Width;
+      const int Iter;
+      const int NumInput;
+      InputCLI(int mode, int Height, int Width, int Iter, int NumInput) : mode(mode), Height(Height), Width(Width), Iter(Iter), NumInput(NumInput) {}
+      InputCLI &operator=(const InputCLI &other)
+      {
+         // Guard self assignment
+         if (this == &other)return *this;
+         return *this;
+      }
+   }; // CONST INITIALIZER
 
    class Manager : public Board // Namespace::class = App Manager
    {
    private:
-      Board *board;
+      InputCLI* input;
    public:
+      /// @brief FILE INPUT
       Manager();
+      /// @brief CLI INPUT 
+      /// @param argc
+      /// @param argv
+      Manager(int argc, char **argv);
       ~Manager();
-      /**
-       * run the program
-       * 
-       * @param int argc
-       * @param char** argv
-      */
-      void run(int argc, char** argv)
-      {
-         init(argv, board);
-         run(board);
-      }
-      void init(char **argv, Board *&board)
-      {
-         std::string fileName = "data.txt";
-         ReadInFile(fileName, board);
-         // ReadInCLI(input,board);
-         // if(argc != 6)throw std::runtime_error("Not efficient argument was provide");
-         // Input input = {
-         //    atoi(argv[1]),
-         //    atoi(argv[2]),
-         //    atoi(argv[3]),
-         //    atoi(argv[4]),
-         //    atoi(argv[5]),
-         // };
-      }
-      void run(Board *&board)
+      void run()
       {
          int i = 20;
-         board->printPlayer();
+         std::cout << (this->input == NULL) << std::endl; //if NULL DEBUG MODE ON
+         this->printPlayer();
          while (i--)
          {
             // board->printTemp();
             // board->CalcLifeCell();
-            board->mapNeighbor();
-            board->calcNeighbor();
-            board->setCell();
-            board->printPlayer();
-            std::cout << i<< std:: endl;
-            std:: cout << "it end here 2" << i << std :: endl;;
+            this->mapNeighbor();
+            this->calcNeighbor();
+            this->setCell();
+            this->printPlayer();
+            std::cout << i << std::endl;
             // usleep(1000000);
             // system("clear");
          }
-         std:: cout << "it end here 1";
       }
       /**
        * Read player input file
@@ -71,7 +56,7 @@ namespace APP
        * @param string filename
        * @throw runtime_error e
        */
-      void ReadInFile(std::string filename, Board *&board)
+      void ReadInFile(std::string filename)
       {
          std::fstream file(filename, std::ios::in);
          int num = 0;
@@ -80,10 +65,9 @@ namespace APP
          if (file.is_open() && file.good())
          {
             file >> num;
-            board = new Board();
-            board->setPlayer();
+            this->setPlayer();
             while (file >> y >> x)
-               board->setSelf(y, x, CELLVAl::POP);
+               this->setSelf(y, x, CELLVAl::POP);
             file.clear();
             file.close();
          }
@@ -94,20 +78,29 @@ namespace APP
             throw std::runtime_error("Could not open the file");
          }
       }
-      void ReadInCLI(InputCLI in,Board*& board){
-         board = new Board(in.Width,in.Height);
-         board->setPlayer();
-      }
    };
 
    Manager ::Manager()
    {
+      std::string fileName = "data.txt";
+      ReadInFile(fileName);
    }
-
+   Manager ::Manager(int argc, char **argv)
+   {
+      if (argc != 6)
+         throw std::runtime_error("No efficient parameter");
+      this->input = new InputCLI(
+         atoi(argv[1]),
+          atoi(argv[2]),
+          atoi(argv[3]),
+          atoi(argv[4]),
+          atoi(argv[5])
+      );
+      this->setLength(this->input->Height, this->input->Width);
+   }
    Manager ::~Manager()
    {
-      Board::~Board();
-      delete board;
+      delete this->input;
    }
 }
 

@@ -34,10 +34,15 @@ namespace APP
    class Board
    {
    public:
+   protected:
       const int SPACING = 2; // SPACING NEED TO BE EVEN, LIKE 1-9 NEED 0 and 10
       Board() {}
       Board(int width, int height)
       {
+         HEIGHT = height;
+         WIDTH = width;
+      }
+      void setLength(int height,int width){
          HEIGHT = height;
          WIDTH = width;
       }
