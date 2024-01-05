@@ -1,7 +1,5 @@
 #ifndef BOARD_H
 #define BOARD_H
-#define EMPTY 0
-#define POPULATE 1
 #define listCell std::list<Cell>
 #define unMapCell std::unordered_map<Cell, int, KeyHasher> //(Cell,Cell Value,Keyhasher)
 namespace APP

@@ -25,9 +25,9 @@ namespace APP
    private:
       InputCLI* input;
    public:
-      /// @brief FILE INPUT
+      /// @brief FILE INPUT (DEBUG MODE)
       Manager();
-      /// @brief CLI INPUT 
+      /// @brief CLI INPUT (RELEASE MODE)
       /// @param argc
       /// @param argv
       Manager(int argc, char **argv);
