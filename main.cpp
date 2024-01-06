@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 {
    try
    {
-      APP::Manager* manager = new APP::Manager();
+      APP::Manager* manager = new APP::Manager(argc,argv);
       manager->run();
       delete manager;
    }

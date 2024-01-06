@@ -24,6 +24,11 @@ namespace APP
    {
    private:
       InputCLI* input;
+      enum  Mode{
+         ATK,
+         DEF,
+         DEBUG
+      } mode;
    public:
       /// @brief FILE INPUT (DEBUG MODE)
       Manager();
@@ -34,20 +39,30 @@ namespace APP
       ~Manager();
       void run()
       {
-         int i = 20;
-         std::cout << (this->input == NULL) << std::endl; //if NULL DEBUG MODE ON
-         this->printPlayer();
-         while (i--)
-         {
-            // board->printTemp();
-            // board->CalcLifeCell();
-            this->mapNeighbor();
-            this->calcNeighbor();
-            this->setCell();
-            this->printPlayer();
-            std::cout << i << std::endl;
+
+         // std::cout << (this->input == NULL) << std::endl; //if NULL DEBUG MODE ON
+         // int i = 20;
+         // this->printPlayer();
+         // while (i--)
+         // {
+         //    // board->printTemp();
+         //    // board->CalcLifeCell();
+         //    this->mapNeighbor();
+         //    this->calcNeighbor();
+         //    this->setCell();
+         //    this->printPlayer();
+         //    std::cout << i << std::endl;
             // usleep(1000000);
             // system("clear");
+
+         // }
+         if(this->mode == Mode::DEF)
+         {
+            std :: cout << std::endl;
+            this->printPlayer();
+            std :: cout << std::endl;
+            this->getDefender(input->NumInput);
+            this->printPlayer();
          }
       }
       /**
@@ -84,23 +99,36 @@ namespace APP
    {
       std::string fileName = "data.txt";
       ReadInFile(fileName);
+      this->mode = Mode::DEBUG;
    }
    Manager ::Manager(int argc, char **argv)
    {
-      if (argc != 6)
-         throw std::runtime_error("No efficient parameter");
-      this->input = new InputCLI(
+      switch (atoi(argv[1]))
+      {
+      case 1:
+         this->mode = Mode::DEF;
+
+         this->input = new InputCLI(
          atoi(argv[1]),
           atoi(argv[2]),
           atoi(argv[3]),
           atoi(argv[4]),
           atoi(argv[5])
-      );
-      this->setLength(this->input->Height, this->input->Width);
+         );
+         this->setLength(this->input->Height, this->input->Width);
+         this->setPlayer();
+         break;
+      case 2:
+         this->mode = Mode::ATK;
+         break;
+      default:
+         throw std::runtime_error("No efficient parameter");
+         break;
+      }
    }
    Manager ::~Manager()
    {
-      delete this->input;
+      if(this->input != nullptr)delete this->input;
    }
 }
 

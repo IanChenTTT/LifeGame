@@ -34,15 +34,20 @@ namespace APP
    public:
    protected:
       const int SPACING = 2; // SPACING NEED TO BE EVEN, LIKE 1-9 NEED 0 and 10
+      const Cell InitCELL = {
+          1,
+          1,
+      };
       Board() {}
       Board(int width, int height)
       {
          HEIGHT = height;
          WIDTH = width;
       }
-      void setLength(int height,int width){
-         HEIGHT = height;
-         WIDTH = width;
+      void setLength(int height, int width)
+      {
+         this->HEIGHT = height;
+         this->WIDTH = width;
       }
       static int getWidth() { return WIDTH; }
       static int getHeight() { return HEIGHT; }
@@ -52,6 +57,10 @@ namespace APP
          for (int y = 0; y < this->HEIGHT + SPACING; y++)
             this->playerBuffer[y] = (int *)calloc(this->WIDTH + SPACING, sizeof(int));
       }
+      /// @brief set player buffer
+      /// @param int y
+      /// @param int x
+      /// @param CELLVAL val
       void setSelf(int y, int x, CELLVAl val)
       {
          this->playerBuffer[y][x] = val;
@@ -130,9 +139,41 @@ namespace APP
             std ::cout << std ::endl;
          }
       }
+      void getDefender(const int NumInput)
+      {
+         int num = 0;
+         int x;
+         int y;
+         std :: vector<Cell> Block; // Fit L to 田
+         std::cout << "x: " << InitCELL.x << " Y: " << InitCELL.y << std::endl;
+         for (y = InitCELL.y; (y < HEIGHT) && num + 3 < NumInput; y += 3)
+         {
+            std::cout << "x: " << x << " Y: " << y << std::endl;
+            for (x = InitCELL.x ; (x < WIDTH) && num + 3 <  NumInput; x += 3)
+            {
+               std::cout << "x: " << x << " Y: " << y << std::endl;
+               if (x + 1 <= WIDTH && y + 1 <= HEIGHT) // FOUR TYPE OF L
+               {
+                  this->setSelf(y, x, CELLVAl::POP);
+                  this->setSelf(y, x + 1, CELLVAl::POP);
+                  this->setSelf(y + 1, x, CELLVAl::POP);
+                  num += 3;
+                  Block.push_back(Cell{y+1,x+1,CELLVAl::POP});
+               }
+            }
+         }
+         for (auto cell : Block ){
+            this->setSelf(cell.y,cell.x,cell.val);
+            num++;
+         }
+         std :: cout << "\n num left is: " << NumInput- num << std:: endl;
+      }
+      void getAttacker()
+      {
+      }
       ~Board()
       {
-         this->freePlayerBuf();
+         if(this->playerBuffer != NULL)this->freePlayerBuf();
       }
 
    private:
