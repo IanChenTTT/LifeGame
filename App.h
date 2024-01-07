@@ -39,38 +39,24 @@ namespace APP
       ~Manager();
       void run()
       {
-
-         // std::cout << (this->input == NULL) << std::endl; //if NULL DEBUG MODE ON
-         // int i = 20;
-         // this->printPlayer();
-         // while (i--)
-         // {
-         //    // board->printTemp();
-         //    // board->CalcLifeCell();
-         //    this->mapNeighbor();
-         //    this->calcNeighbor();
-         //    this->setCell();
-         //    this->printPlayer();
-         //    std::cout << i << std::endl;
-            // usleep(1000000);
-            // system("clear");
-
-         // }
          if(this->mode == Mode::DEF)
          {
-            std :: cout << std::endl;
-            this->printPlayer();
-            std :: cout << std::endl;
             this->getDefender(input->NumInput);
-            this->printPlayer();
+
+            // int i = 10; //test iteration function
+            // while(i--)
+            // {
+            //    std :: cout << std::endl;
+            //    this->mapNeighbor();
+            //    this->calcNeighbor();
+            //    this->setCell();
+            //    this->printPlayer();
+            //    std :: cout << std::endl;
+            // }
          }
       }
-      /**
-       * Read player input file
-       *
-       * @param string filename
-       * @throw runtime_error e
-       */
+      /// @brief std input >> to playerBuffer
+      /// @param filename 
       void ReadInFile(std::string filename)
       {
          std::fstream file(filename, std::ios::in);
@@ -103,6 +89,8 @@ namespace APP
    }
    Manager ::Manager(int argc, char **argv)
    {
+      if( argc > 7 || argc < 6)
+         throw std::runtime_error("No efficient parameter");
       switch (atoi(argv[1]))
       {
       case 1:

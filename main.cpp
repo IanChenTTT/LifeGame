@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <list>
 #include <unordered_map>
+#include <vector>
 #include "App.h"
 int APP::Board::WIDTH = 9;
 int APP::Board::HEIGHT = 9;

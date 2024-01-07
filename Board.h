@@ -144,29 +144,111 @@ namespace APP
          int num = 0;
          int x;
          int y;
+         int MH = HEIGHT/2;
          std :: vector<Cell> Block; // Fit L to 田
-         std::cout << "x: " << InitCELL.x << " Y: " << InitCELL.y << std::endl;
-         for (y = InitCELL.y; (y < HEIGHT) && num + 3 < NumInput; y += 3)
+         for (y = InitCELL.y; (y <= MH) && num + 3 < NumInput; y += 3)
          {
-            std::cout << "x: " << x << " Y: " << y << std::endl;
             for (x = InitCELL.x ; (x < WIDTH) && num + 3 <  NumInput; x += 3)
             {
-               std::cout << "x: " << x << " Y: " << y << std::endl;
-               if (x + 1 <= WIDTH && y + 1 <= HEIGHT) // FOUR TYPE OF L
+               if(y % 2)
                {
-                  this->setSelf(y, x, CELLVAl::POP);
-                  this->setSelf(y, x + 1, CELLVAl::POP);
-                  this->setSelf(y + 1, x, CELLVAl::POP);
-                  num += 3;
-                  Block.push_back(Cell{y+1,x+1,CELLVAl::POP});
+                  if (x % 2) // FOUR TYPE OF L
+                  {
+                     this->setSelf(y, x, CELLVAl::POP);
+                     this->setSelf(y, x + 1, CELLVAl::POP);
+                     this->setSelf(y + 1, x, CELLVAl::POP);
+                     num += 3;
+                     Block.push_back(Cell{x+1,y+1,CELLVAl::POP});
+                  }
+                  else{
+                     this->setSelf(y, x, CELLVAl::POP);
+                     this->setSelf(y, x + 1, CELLVAl::POP);
+                     this->setSelf(y + 1, x + 1, CELLVAl::POP);
+                     num += 3;
+                     Block.push_back(Cell{x,y+1,CELLVAl::POP});
+                  }
+               }
+               else{
+                  if (x % 2) // FOUR TYPE OF L
+                  {
+                     this->setSelf(y+ 1, x + 1, CELLVAl::POP);
+                     this->setSelf(y, x + 1, CELLVAl::POP);
+                     this->setSelf(y + 1, x, CELLVAl::POP);
+                     num += 3;
+                     Block.push_back(Cell{x,y,CELLVAl::POP});
+                  }
+                  else{
+                     this->setSelf(y, x, CELLVAl::POP);
+                     this->setSelf(y + 1, x , CELLVAl::POP);
+                     this->setSelf(y + 1, x + 1, CELLVAl::POP);
+                     num += 3;
+                     Block.push_back(Cell{x+1,y,CELLVAl::POP});
+                  }
                }
             }
          }
-         for (auto cell : Block ){
-            this->setSelf(cell.y,cell.x,cell.val);
-            num++;
+        for (y = HEIGHT; (y > MH + 2) && num + 3 < NumInput; y -= 3)
+         {
+            for (x = WIDTH ; (x > InitCELL.x) && num + 3 <  NumInput; x -= 3)
+            {
+               if(y%2){
+                  if (x % 2) // FOUR TYPE OF L
+                  {
+                     this->setSelf(y - 1, x - 1, CELLVAl::POP);
+                     this->setSelf(y , x - 1, CELLVAl::POP);
+                     this->setSelf(y -1 , x , CELLVAl::POP);
+                     num += 3;
+                     Block.push_back(Cell{x,y,CELLVAl::POP});
+                  }
+                  else{
+                     this->setSelf(y, x, CELLVAl::POP);
+                     this->setSelf(y - 1, x - 1, CELLVAl::POP);
+                     this->setSelf(y - 1, x, CELLVAl::POP);
+                     num += 3;
+                     Block.push_back(Cell{x-1,y,CELLVAl::POP});
+                  }
+               }
+               else{
+                  if ( x % 2) // FOUR TYPE OF L
+                  {
+                     this->setSelf(y, x, CELLVAl::POP);
+                     this->setSelf(y, x - 1, CELLVAl::POP);
+                     this->setSelf(y - 1, x - 1, CELLVAl::POP);
+                     num += 3;
+                     Block.push_back(Cell{x,y-1,CELLVAl::POP});
+                  }
+                  else{
+                     this->setSelf(y, x, CELLVAl::POP);
+                     this->setSelf(y, x - 1, CELLVAl::POP);
+                     this->setSelf(y - 1, x, CELLVAl::POP);
+                     num += 3;
+                     Block.push_back(Cell{x-1,y-1,CELLVAl::POP});
+                  }
+               }
+            }
          }
-         std :: cout << "\n num left is: " << NumInput- num << std:: endl;
+         if(NumInput > (WIDTH*HEIGHT/2))
+         {
+            for (auto cell : Block ){
+               this->setSelf(cell.y,cell.x,cell.val);
+               num++;
+            }
+            
+         }
+         for(y = InitCELL.y ; y <= HEIGHT && num < NumInput ; y++){
+               for(x = InitCELL.x ; x <= WIDTH && num < NumInput ; x++){
+                  if(this->playerBuffer[y][x] == 0){
+                     setSelf(y,x,CELLVAl::POP);
+                     num++;
+                  } 
+                 
+               }
+         }
+       for (auto i : this->popCell)
+       {
+          std :: cout << i.x << " " << i.y << std::endl; 
+       }
+       
       }
       void getAttacker()
       {
