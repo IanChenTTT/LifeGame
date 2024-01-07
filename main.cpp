@@ -1,8 +1,9 @@
 #include <iostream>
-#include <fstream>
-#include <iomanip>
 #include <list>
+#include <fstream>
 #include <unordered_map>
+#include <thread>
+#include <mutex>
 #include <vector>
 #include "App.h"
 int APP::Board::WIDTH = 9;

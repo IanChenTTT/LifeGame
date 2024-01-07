@@ -135,7 +135,7 @@ namespace APP
          for (int y = 1; y < HEIGHT + SPACING / 2; y++)
          {
             for (int x = 1; x < WIDTH + SPACING / 2; x++)
-               std ::cout << std::setw(2) << this->playerBuffer[y][x];
+               std ::cout << "  " << this->playerBuffer[y][x];
             std ::cout << std ::endl;
          }
       }
@@ -250,8 +250,9 @@ namespace APP
        }
        
       }
-      void getAttacker()
+      void getAttacker(int ATKNum)
       {
+         this->setAttacker(ATKNum);
       }
       ~Board()
       {
@@ -270,6 +271,21 @@ namespace APP
          for (int y = 0; y < this->HEIGHT + SPACING; y++)
             delete[] playerBuffer[y];
          delete[] playerBuffer;
+      }
+      void setAttacker(int ATKNum){
+           int i; 
+            int x;
+            int y;
+            while(ATKNum--)
+            {
+               int i = 10;
+               std :: cin >> x >> y;
+               std :: cout << x << " " << y << std::endl;
+               this->setSelf(y,x,CELLVAl::POP);
+               std :: cout << this->popCell.size() << std :: endl;
+            }
+      }
+      void Task(){
       }
    };
 } // namespace APP

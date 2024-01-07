@@ -3,6 +3,7 @@
 #include "Board.h"
 namespace APP
 {
+   std::mutex g_mutex;
    /// @brief READONLY struct from user CLI input
    struct InputCLI
    {
@@ -29,6 +30,7 @@ namespace APP
          DEF,
          DEBUG
       } mode;
+      int ATKNum;
    public:
       /// @brief FILE INPUT (DEBUG MODE)
       Manager();
@@ -37,10 +39,8 @@ namespace APP
       /// @param argv
       Manager(int argc, char **argv);
       ~Manager();
-      void run()
-      {
-         if(this->mode == Mode::DEF)
-         {
+      void run(){
+         if(this->mode == Mode::DEF){
             this->getDefender(input->NumInput);
 
             // int i = 10; //test iteration function
@@ -53,6 +53,9 @@ namespace APP
             //    this->printPlayer();
             //    std :: cout << std::endl;
             // }
+         }
+         if(this->mode ==Mode::ATK){
+            this->getAttacker(this->ATKNum);
          }
       }
       /// @brief std input >> to playerBuffer
@@ -108,6 +111,16 @@ namespace APP
          break;
       case 2:
          this->mode = Mode::ATK;
+         this->input = new InputCLI(
+         atoi(argv[1]),
+          atoi(argv[2]),
+          atoi(argv[3]),
+          atoi(argv[4]),
+          atoi(argv[5])
+         );
+         this->ATKNum = atoi(argv[6]);
+         this->setLength(this->input->Height, this->input->Width);
+         this->setPlayer();
          break;
       default:
          throw std::runtime_error("No efficient parameter");
