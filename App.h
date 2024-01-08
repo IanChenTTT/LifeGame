@@ -92,6 +92,7 @@ namespace APP
    }
    Manager ::Manager(int argc, char **argv)
    {
+
       if( argc > 7 || argc < 6)
          throw std::runtime_error("No efficient parameter");
       switch (atoi(argv[1]))

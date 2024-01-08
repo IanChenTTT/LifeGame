@@ -244,9 +244,12 @@ namespace APP
                  
                }
          }
+       int tem = 0;
        for (auto i : this->popCell)
        {
-          std :: cout << i.x << " " << i.y << std::endl; 
+         std :: cout << i.x << " " << i.y ; 
+         if(tem++ < this->popCell.size()-1)
+            std::cout << std::endl;
        }
        
       }
@@ -274,12 +277,10 @@ namespace APP
          delete[] playerBuffer;
       }
       void setAttacker(int ATKNum){
-           int i; 
-            int x;
-            int y;
+            int x = 0;
+            int y = 0;
             while(ATKNum--)
             {
-               int i = 10;
                std :: cin >> x >> y;
                this->setSelf(y,x,CELLVAl::POP);
             }
@@ -291,7 +292,9 @@ namespace APP
          {
             if(this->playerBuffer[it->first.y][it->first.x] != 1)
              {
-               std :: cout << it->first.x << " "<< it->first.y << std::endl;
+               std :: cout << it->first.x << " "<< it->first.y ;
+               if(NumInput - 1 > 1)
+                  std::cout << std::endl;
                this->setSelf(it->first.y  ,it->first.x ,CELLVAl::POP);
                NumInput--;
              }     
