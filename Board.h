@@ -293,8 +293,8 @@ namespace APP
              {
                std :: cout << it->first.x << " "<< it->first.y << std::endl;
                this->setSelf(it->first.y  ,it->first.x ,CELLVAl::POP);
+               NumInput--;
              }     
-            NumInput--;
          }
          return 0;
       }
