@@ -2,9 +2,8 @@
 #include <list>
 #include <fstream>
 #include <unordered_map>
-#include <thread>
-#include <mutex>
 #include <vector>
+#include <future> 
 #include "App.h"
 int APP::Board::WIDTH = 9;
 int APP::Board::HEIGHT = 9;

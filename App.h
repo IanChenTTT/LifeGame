@@ -55,7 +55,7 @@ namespace APP
             // }
          }
          if(this->mode ==Mode::ATK){
-            this->getAttacker(this->ATKNum);
+            this->getAttacker(ATKNum,input->NumInput);
          }
       }
       /// @brief std input >> to playerBuffer
@@ -100,11 +100,11 @@ namespace APP
          this->mode = Mode::DEF;
 
          this->input = new InputCLI(
-         atoi(argv[1]),
-          atoi(argv[2]),
-          atoi(argv[3]),
-          atoi(argv[4]),
-          atoi(argv[5])
+            atoi(argv[1]),
+            atoi(argv[2]),
+            atoi(argv[3]),
+            atoi(argv[4]),
+            atoi(argv[5])
          );
          this->setLength(this->input->Height, this->input->Width);
          this->setPlayer();
@@ -112,11 +112,11 @@ namespace APP
       case 2:
          this->mode = Mode::ATK;
          this->input = new InputCLI(
-         atoi(argv[1]),
-          atoi(argv[2]),
-          atoi(argv[3]),
-          atoi(argv[4]),
-          atoi(argv[5])
+            atoi(argv[1]),
+            atoi(argv[2]),
+            atoi(argv[3]),
+            atoi(argv[4]),
+            atoi(argv[5])
          );
          this->ATKNum = atoi(argv[6]);
          this->setLength(this->input->Height, this->input->Width);

@@ -79,8 +79,8 @@ namespace APP
             {
                for (int x1 = x - 1; x1 <= x + 1; x1++)
                {
-                  if (y1 <= 0 || y1 >= HEIGHT + SPACING / 2 || x1 <= 0 || x1 >= WIDTH + SPACING / 2)
-                     continue;
+                  if (y1 <= 0 || y1 >= HEIGHT + (SPACING / 2) || x1 <= 0 || x1 >= WIDTH + (SPACING / 2))
+                        continue;
                   this->mapCell.emplace(Cell{x1, y1, (CELLVAl)this->playerBuffer[y1][x1]}, CELLVAl::EMP);
                }
             }
@@ -235,8 +235,8 @@ namespace APP
             }
             
          }
-         for(y = InitCELL.y ; y <= HEIGHT && num < NumInput ; y++){
-               for(x = InitCELL.x ; x <= WIDTH && num < NumInput ; x++){
+         for(y = HEIGHT ; y >= InitCELL.y && num < NumInput ; y--){
+               for(x = WIDTH ; x >= InitCELL.x && num < NumInput ; x--){
                   if(this->playerBuffer[y][x] == 0){
                      setSelf(y,x,CELLVAl::POP);
                      num++;
@@ -250,9 +250,10 @@ namespace APP
        }
        
       }
-      void getAttacker(int ATKNum)
+      void getAttacker(int ATKNum, const int Numinput)
       {
          this->setAttacker(ATKNum);
+         this->Task(Numinput);
       }
       ~Board()
       {
@@ -280,13 +281,29 @@ namespace APP
             {
                int i = 10;
                std :: cin >> x >> y;
-               std :: cout << x << " " << y << std::endl;
                this->setSelf(y,x,CELLVAl::POP);
-               std :: cout << this->popCell.size() << std :: endl;
             }
+            this->mapNeighbor();
       }
-      void Task(){
+      int Task(int NumInput){
+         
+         for (auto it = this->mapCell.begin(); it != this->mapCell.end() && NumInput > 0; ++it)
+         {
+            if(this->playerBuffer[it->first.y][it->first.x] != 1)
+             {
+               std :: cout << it->first.x << " "<< it->first.y << std::endl;
+               this->setSelf(it->first.y  ,it->first.x ,CELLVAl::POP);
+             }     
+            NumInput--;
+         }
+         return 0;
       }
+      int taskSchedule(int NumInput){
+         // std::future<int> fut = std::async(std::launch::async,Task,NumInput);
+         return 0;
+      }
+    
+
    };
 } // namespace APP
 #endif
